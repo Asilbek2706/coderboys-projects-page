@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Projects · Coderboys.uz</title>
+
+  <!-- Bootstrap 5 CSS + Bootstrap Icons + Animate.css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <style>
+    :root{
+      --accent-dark: #00e6e6;
+      --accent-light: #0d6efd;
+      --muted-dark: rgba(255,255,255,0.75);
+      --muted-light: #556;
+      /* link colors (scoped) */
+      --link-color: var(--accent-dark);
+      --link-hover: #7efffb;
+    }
+
+    /* Base */
+    html,body{height:100%}
+    body{
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin:0;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      transition: background-color .4s ease, color .3s ease;
+    }
+
+    /* Theme variables (overridden by classes) */
+    body.light-mode{
+      background: linear-gradient(180deg,#f7f9fc 0%, #eef4fb 100%);
+      color: #0b1530;
+      --card-bg: rgba(255,255,255,0.95);
+      --card-border: rgba(13,110,253,0.06);
+      --accent: var(--accent-light);
+      --muted: var(--muted-light);
+      --glass-opacity: 0.95;
+      --link-color: #0b6b67; /* dark teal for light backgrounds (not default blue) */
+      --link-hover: #0f8b85;
+    }
+    body.dark-mode{
+      background: linear-gradient(135deg,#0f2027,#203a43 50%,#2c5364);
+      color: #eef6f6;
+      --card-bg: rgba(10,12,14,0.38);
+      --card-border: rgba(0,230,230,0.06);
+      --accent: var(--accent-dark);
+      --muted: var(--muted-dark);
+      --glass-opacity: 0.08;
+      --link-color: var(--accent-dark);
+      --link-hover: #66fff7;
+    }
+
+    /* Controls (top-right) */
+    .controls{
+      position:fixed; right:18px; top:18px; z-index:1200;
+      display:flex; gap:8px; align-items:center;
+    }
+    .controls .btn {
+      padding:6px 10px; font-size:0.85rem;
+    }
+
+    /* Header / Avengers-style text */
+    .header {
+      padding:5rem 1rem 2rem;
+      text-align:center;
+    }
+    .avengers-wrap {
+      display:inline-block;
+      will-change:transform;
+      perspective:1200px;
+    }
+    .avengers-text{
+      display:inline-block;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:6px;
+      font-size: clamp(2.1rem, 5vw, 3.2rem);
+      line-height:1;
+      user-select:none;
+    }
+    /* default letter style */
+    .avengers-text span{
+      display:inline-block;
+      opacity:0;
+      transform: translateX(-140px);
+      transform-origin:center;
+      color: var(--muted);
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
+    }
+    /* even letters slide from right */
+    .avengers-text span:nth-child(even){
+      transform: translateX(140px);
+    }
+    /* assign delays per letter (auto sequencing) */
+    .avengers-text span { animation: slideIn .65s forwards cubic-bezier(.2,.9,.2,1); }
+    .avengers-text span:nth-child(1) { animation-delay: .12s; }
+    .avengers-text span:nth-child(2) { animation-delay: .24s; }
+    .avengers-text span:nth-child(3) { animation-delay: .36s; }
+    .avengers-text span:nth-child(4) { animation-delay: .48s; }
+    .avengers-text span:nth-child(5) { animation-delay: .60s; }
+    .avengers-text span:nth-child(6) { animation-delay: .72s; }
+    .avengers-text span:nth-child(7) { animation-delay: .84s; }
+    .avengers-text span:nth-child(8) { animation-delay: .96s; }
+    .avengers-text span:nth-child(9) { animation-delay: 1.08s; } /* this is 'S' */
+    .avengers-text span:nth-child(10){ animation-delay: 1.20s; }
+    .avengers-text span:nth-child(11){ animation-delay: 1.32s; }
+    .avengers-text span:nth-child(12){ animation-delay: 1.44s; }
+
+    /* special S styling: bigger, color, tilt to the RIGHT */
+    .avengers-text span.special {
+      color: #ff3b3b; /* neon red */
+      font-size: 1.18em;
+      transform: translateX(140px) rotate(8deg) scale(1.05); /* starting transform */
+      animation-name: slideInSpecial;
+      text-shadow: 0 6px 20px rgba(255,59,59,0.18), 0 0 18px rgba(255,59,59,0.12);
+      letter-spacing: 8px;
+    }
+
+    @keyframes slideIn {
+      to { opacity:1; transform: translateX(0) rotate(0) scale(1); color: var(--accent); filter: none;}
+    }
+    @keyframes slideInSpecial {
+      to { opacity:1; transform: translateX(0) rotate(8deg) scale(1.18); color:#ff3b3b; }
+    }
+
+    /* subtitle */
+    .subtitle { margin-top:.6rem; font-weight:600; color:var(--muted); }
+
+    /* layout containers */
+    .section { padding:3rem 1rem; }
+    .section .section-title { color: var(--accent); font-weight:700; margin-bottom:1rem; text-align:center; text-shadow:0 0 8px rgba(0,0,0,0.15); }
+
+    /* cards (glass) */
+    .glass-card{
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius:14px; padding:20px;
+      backdrop-filter: blur(8px);
+      transition: transform .28s ease, box-shadow .28s ease, background .28s ease;
+      color: inherit;
+    }
+    .glass-card:hover{ transform: translateY(-6px); box-shadow:0 12px 40px rgba(2,6,23,0.35); }
+
+    /* Bot list should match theme (no white boxes in light/dark) */
+    .bot-list .glass-card { display:flex; gap:12px; align-items:center; }
+    .bot-icon {
+      width:56px; height:56px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center; font-size:1.35rem;
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06));
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    /* contact */
+    .contact-box { display:flex; gap:16px; align-items:center; }
+    .contact-meta { flex:1; text-align:left; }
+    .contact-meta small { display:block; color:var(--muted); }
+
+    /* Link styling for project cards, bots and contact (no default browser blue) */
+    .glass-card a, .bot-list a, .contact-meta a {
+      color: var(--link-color);
+      text-decoration: none;
+      transition: color .15s ease, transform .12s ease, opacity .12s ease;
+      border-bottom: 1px dashed transparent;
+    }
+    .glass-card h5 a { font-weight:700; font-size:1.05rem; }
+    .glass-card a.card-link { font-weight: 600; }
+
+    .glass-card a:hover, .bot-list a:hover, .contact-meta a:hover {
+      color: var(--link-hover);
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-bottom-color: rgba(255,255,255,0.06);
+    }
+    body.light-mode .glass-card a:hover{ border-bottom-color: rgba(0,0,0,0.08); }
+    .glass-card a:focus { outline: 2px dashed rgba(0,0,0,0.08); outline-offset:3px; }
+
+    /* responsiveness tweaks */
+    @media (max-width:767px){
+      .avengers-text{font-size:2.1rem; letter-spacing:3px}
+      .bot-icon{width:48px;height:48px}
+      .header{padding:3rem 1rem 1.5rem}
+    }
+
+    /* small utility */
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body class="dark-mode">
+
+  <!-- Controls -->
+  <div class="controls">
+    <button id="langBtn" class="btn btn-sm btn-outline-light" aria-label="Toggle language">UZ</button>
+    <button id="themeBtn" class="btn btn-sm btn-outline-light" aria-label="Toggle theme">
+      <i id="themeIcon" class="bi bi-moon-stars-fill"></i>
+    </button>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="avengers-wrap" aria-hidden="false">
+      <h1 class="avengers-text" aria-label="Coderboys dot uz">
+        <!-- Important: keep S as nth-child(9) and add class 'special' to it -->
+        <span>C</span><span>O</span><span>D</span><span>E</span><span>R</span>
+        <span>B</span><span>O</span><span>Y</span><span class="special">S</span>
+        <span class="dot">.</span><span>U</span><span>Z</span>
+      </h1>
+    </div>
+    <p id="subtitle" class="subtitle">Quality Developers Community</p>
+  </header>
+
+  <!-- Intro -->
+  <main>
+    <section class="section text-center">
+      <div class="container">
+        <p id="intro" class="lead fs-5 mx-auto" style="max-width:880px;">
+          We are <strong>Ahrorjon Ibrohimjonov</strong> and <strong>Asadbek To‘rayev</strong>, 2nd-year students at Acharya University. Our journey is built on persistence, curiosity and many late-night coding sessions.
+        </p>
+      </div>
+    </section>
+
+    <!-- Ahrorjon -->
+    <section class="section">
+      <div class="container">
+        <h2 id="aboutAhror" class="section-title">About Ahrorjon Ibrohimjonov</h2>
+        <div class="glass-card">
+          <p id="ahrorText">
+            I am Ahrorjon Ibrohimjonov — a dedicated 2nd-year student at Acharya University with <strong>4.5 years</strong> of practical experience in web development and backend engineering. I build scalable Django applications, FastAPI services, automation tools and AI-integrations. My focus is on clean architecture, testable code and developer-friendly APIs. Key projects include an LMS for Acharya students, an event management system and a FastAPI book database. I also create Telegram bots that improve workflows and notifications for users. I enjoy mentoring, reading about system design and contributing to open-source when possible.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ahrorjon Projects -->
+    <section class="section bg-transparent">
+      <div class="container">
+        <h3 id="myProjects" class="section-title">My Projects</h3>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="glass-card">
+              <h5><a href="https://acharya.coderboys.uz" target="_blank" rel="noopener" class="card-link">acharya.coderboys.uz</a></h5>
+              <p id="proj1" class="muted">A Learning Management System built for Acharya students — courses, attendance, and progress tracking.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="glass-card">
+              <h5><a href="https://event.coderboys.uz" target="_blank" rel="noopener" class="card-link">event.coderboys.uz</a></h5>
+              <p id="proj2" class="muted">Event management platform with scheduling, registrations and admin dashboard.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="glass-card">
+              <h5><a href="https://baza.coderboys.uz" target="_blank" rel="noopener" class="card-link">baza.coderboys.uz</a></h5>
+              <p id="proj3" class="muted">FastAPI-powered online books database with search and metadata endpoints.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="glass-card">
+              <h5><a href="https://lab.coderboys.uz/github-webhook" target="_blank" rel="noopener" class="card-link">lab.coderboys.uz/github-webhook</a></h5>
+              <p id="proj4" class="muted">GitHub Webhook Notifications system — CI-friendly notifications to Telegram / web dashboards.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bots -->
+    <section class="section">
+      <div class="container">
+        <h3 id="botsHeading" class="section-title">Telegram Bots</h3>
+        <div class="row g-3 bot-list">
+          <div class="col-lg-4 col-md-6">
+            <div class="glass-card d-flex gap-3 align-items-center">
+              <div class="bot-icon"><i class="bi bi-collection"></i></div>
+              <div>
+                <a href="https://t.me/uzacharya_bot" target="_blank" rel="noopener" class="h6 mb-0 d-block card-link">@uzacharya_bot</a>
+                <small id="bot1" class="muted">Bot for Acharya University — student utilities & info.</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="glass-card d-flex gap-3 align-items-center">
+              <div class="bot-icon"><i class="bi bi-robot"></i></div>
+              <div>
+                <a href="https://t.me/axroraibot" target="_blank" rel="noopener" class="h6 mb-0 d-block card-link">@axroraibot</a>
+                <small id="bot2" class="muted">AI Assistant powered by ChatGPT — chat, code help, quick answers.</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="glass-card d-flex gap-3 align-items-center">
+              <div class="bot-icon"><i class="bi bi-search"></i></div>
+              <div>
+                <a href="https://t.me/uzwikifindbot" target="_blank" rel="noopener" class="h6 mb-0 d-block card-link">@uzwikifindbot</a>
+                <small id="bot3" class="muted">Wikipedia info finder — quick summaries and references.</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="glass-card d-flex gap-3 align-items-center">
+              <div class="bot-icon"><i class="bi bi-bell"></i></div>
+              <div>
+                <a href="https://t.me/auidbot" target="_blank" rel="noopener" class="h6 mb-0 d-block card-link">@auidbot</a>
+                <small id="bot4" class="muted">Notification bot integrated with acharya.coderboys.uz</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="glass-card d-flex gap-3 align-items-center">
+              <div class="bot-icon"><i class="bi bi-chat-dots"></i></div>
+              <div>
+                <a href="https://t.me/axror_contactbot" target="_blank" rel="noopener" class="h6 mb-0 d-block card-link">@axror_contactbot</a>
+                <small id="bot5" class="muted">Contact & info bot — reach Ahrorjon anonymously or openly.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Asadbek -->
+    <section class="section">
+      <div class="container">
+        <h2 id="aboutAsad" class="section-title">About Asadbek To‘rayev</h2>
+        <div class="glass-card">
+          <p id="asadText">
+            Asadbek To‘rayev is a talented and persistent 2nd-year student at Acharya University, my coursemate and close collaborator. He focuses on backend systems, clean architecture and user-centered features. Asadbek created <strong>library.coderboys.uz</strong> — a robust online digital library with advanced search and metadata handling. He values test-driven development, readable code and delivering reliable systems that real users can trust.
+          </p>
+        </div>
+
+        <div class="mt-4 glass-card">
+          <h5 id="asadProjects">Asadbek's Projects</h5>
+          <p id="asad1" class="muted"><a href="https://library.coderboys.uz" target="_blank" rel="noopener" class="card-link">library.coderboys.uz</a> — Digital library project by To‘rayev Asadbek.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Friendship -->
+    <section class="section text-center">
+      <div class="container">
+        <p id="friendship" class="lead mx-auto" style="max-width:880px;">
+          Though we focus on different projects, we are close friends — constantly supporting, reviewing and pushing each other to build better software.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section">
+      <div class="container">
+        <h3 id="contactTitle" class="section-title">Contact Us</h3>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="glass-card contact-box">
+              <div class="flex-shrink-0 text-center" style="width:88px;">
+                <i class="bi bi-person-circle" style="font-size:3.2rem; color:var(--accent)"></i>
+              </div>
+              <div class="contact-meta">
+                <h5 class="mb-1">Ahrorjon Ibrohimjonov</h5>
+                <small id="emailLabel"><i class="bi bi-envelope me-1"></i> Email: <a href="mailto:axrorback@gmail.com" class="card-link">axrorback@gmail.com</a></small>
+                <small id="phoneLabel" class="d-block mt-1"><i class="bi bi-telephone me-1"></i> Phone: <a href="tel:+998931004005" class="card-link">+998 93 100 40 05</a></small>
+                <small id="telegramLabel" class="d-block mt-1"><i class="bi bi-telegram me-1"></i> Telegram: <a href="https://t.me/axrorback" target="_blank" rel="noopener" class="card-link">@axrorback</a></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="glass-card contact-box">
+              <div class="flex-shrink-0 text-center" style="width:88px;">
+                <i class="bi bi-person-circle" style="font-size:3.2rem; color:var(--accent)"></i>
+              </div>
+              <div class="contact-meta">
+                <h5 class="mb-1">Asadbek To‘rayev</h5>
+                <small id="emailLabel2"><i class="bi bi-envelope me-1"></i> Email: <a href="mailto:t.asad7044@gmail.com" class="card-link">t.asad7044@gmail.com</a></small>
+                <small id="phoneLabel2" class="d-block mt-1"><i class="bi bi-telephone me-1"></i> Phone: <a href="tel:+998937127044" class="card-link">+998 93 712 70 44</a></small>
+                <small id="telegramLabel2" class="d-block mt-1"><i class="bi bi-telegram me-1"></i> Telegram: <a href="https://t.me/asad_back" target="_blank" rel="noopener" class="card-link">@asad_back</a></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="py-4 text-center muted">
+      <div class="container"><small id="footer">© 2025 Projects by Ahrorjon & Asadbek — Close Friends & Developers</small></div>
+    </footer>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // --- Preferences (persisted) ---
+    const LS_LANG = 'cb_lang';
+    const LS_THEME = 'cb_theme';
+
+    // Elements that will be translated (keys map to IDs)
+    const transKeys = {
+      subtitle: 'subtitle',
+      intro: 'intro',
+      aboutAhror: 'aboutAhror',
+      ahrorText: 'ahrorText',
+      myProjects: 'myProjects',
+      proj1: 'proj1',
+      proj2: 'proj2',
+      proj3: 'proj3',
+      proj4: 'proj4',
+      botsHeading: 'botsHeading',
+      bot1: 'bot1',
+      bot2: 'bot2',
+      bot3: 'bot3',
+      bot4: 'bot4',
+      bot5: 'bot5',
+      aboutAsad: 'aboutAsad',
+      asadText: 'asadText',
+      asadProjects: 'asadProjects',
+      asad1: 'asad1',
+      friendship: 'friendship',
+      contactTitle: 'contactTitle',
+      // contact label ids
+      emailLabel: 'emailLabel',
+      phoneLabel: 'phoneLabel',
+      telegramLabel: 'telegramLabel',
+      emailLabel2: 'emailLabel2',
+      phoneLabel2: 'phoneLabel2',
+      telegramLabel2: 'telegramLabel2',
+      footer: 'footer',
+      myProjects: 'myProjects'
+    };
+
+    const translations = {
+      en: {
+        subtitle: "Quality Developers Community",
+        intro: "We are <strong>Ahrorjon Ibrohimjonov</strong> and <strong>Asadbek To‘rayev</strong>, 2nd-year students at Acharya University. Our journey is built on persistence, curiosity and many late-night coding sessions.",
+        aboutAhror: "About Ahrorjon Ibrohimjonov",
+        ahrorText: "I am <strong>Ahrorjon Ibrohimjonov</strong> — a dedicated 2nd-year student at Acharya University with <strong>4.5 years</strong> of hands-on experience in Django, FastAPI and backend systems. I create scalable platforms, automation tools, and AI-integrations, focusing on clean architecture and testable code. Notable projects: Acharya LMS, Event manager, FastAPI book database and a GitHub webhook notifications system. I also build Telegram bots to streamline workflows and notifications for users. I enjoy mentoring, system design and contributing to open-source.",
+        myProjects: "My Projects",
+        proj1: "A Learning Management System for Acharya students — courses, attendance, progress.",
+        proj2: "Event Management Platform — scheduling, registrations, admin panel.",
+        proj3: "FastAPI-powered books database with search & metadata endpoints.",
+        proj4: "GitHub Webhook Notifications — integrations to Telegram and dashboards.",
+        botsHeading: "Telegram Bots",
+        bot1: "Bot for Acharya University — student utilities & info.",
+        bot2: "AI Assistant powered by ChatGPT — chat & coding help.",
+        bot3: "Wikipedia info finder — quick summaries and references.",
+        bot4: "Notification bot integrated with acharya.coderboys.uz.",
+        bot5: "Contact & info bot — reach Ahrorjon anonymously or openly.",
+        aboutAsad: "About Asadbek To‘rayev",
+        asadText: "<strong>Asadbek To‘rayev</strong> is a talented and persistent 2nd-year student at Acharya University, my coursemate and close collaborator. He focuses on backend systems, clean architecture and user-centered features. Asadbek developed <a href='https://library.coderboys.uz' target='_blank' rel='noopener' class='card-link'>library.coderboys.uz</a> — a robust online digital library with advanced search. He values test-driven development and readable, maintainable code.",
+        asadProjects: "Asadbek's Projects",
+        asad1: "<a href='https://library.coderboys.uz' target='_blank' rel='noopener' class='card-link'>library.coderboys.uz</a> — Digital library project by To‘rayev Asadbek.",
+        friendship: "Though we focus on different projects, we are close friends — constantly supporting, reviewing and pushing each other to build better software.",
+        contactTitle: "Contact Us",
+        emailLabel: "<i class='bi bi-envelope me-1'></i> Email: <a href='mailto:axrorback@gmail.com' class='card-link'>axrorback@gmail.com</a>",
+        phoneLabel: "<i class='bi bi-telephone me-1'></i> Phone: <a href='tel:+998931004005' class='card-link'>+998 93 100 40 05</a>",
+        telegramLabel: "<i class='bi bi-telegram me-1'></i> Telegram: <a href='https://t.me/axrorback' target='_blank' class='card-link'>@axrorback</a>",
+        emailLabel2: "<i class='bi bi-envelope me-1'></i> Email: <a href='mailto:t.asad7044@gmail.com' class='card-link'>t.asad7044@gmail.com</a>",
+        phoneLabel2: "<i class='bi bi-telephone me-1'></i> Phone: <a href='tel:+998937127044' class='card-link'>+998 93 712 70 44</a>",
+        telegramLabel2: "<i class='bi bi-telegram me-1'></i> Telegram: <a href='https://t.me/asad_back' target='_blank' class='card-link'>@asad_back</a>",
+        footer: "© 2025 Projects by Ahrorjon & Asadbek — Close Friends & Developers"
+      },
+      uz: {
+        subtitle: "Sifatli Dasturchilar Jamoasi",
+        intro: "Biz <strong>Ahrorjon Ibrohimjonov</strong> va <strong>To‘rayev Asadbek</strong> — Acharya Universiteti 2-kurs talabalarimiz. Bizning yo‘limiz mashaqqatli mehnat, qiziquvchanlik va kechqurunlar davomida kod yozishdan iborat.",
+        aboutAhror: "Ahrorjon Ibrohimjonov haqida",
+        ahrorText: "Men <strong>Ahrorjon Ibrohimjonov</strong> — Acharya Universiteti 2-kurs talabasi, Django, FastAPI va backend tizimlarda <strong>4.5 yillik</strong> amaliy tajribaga egaman. Men kengaytiriladigan platformalar, avtomatlashtirish vositalari va AI integratsiyalarini yarataman. Mening afzalliklarim — toza arxitektura, test qamrovi va developer-dostu APIlar. Muhim loyihalar: Acharya LMS, Event manager, FastAPI kitoblar bazasi va GitHub webhook tizimi. Shuningdek, foydalanuvchilar uchun Telegram botlari yarataman. Men tizim dizayni va ochiq manbaga hissa qo‘shishni yoqtiraman.",
+        myProjects: "Mening Loyihalarim",
+        proj1: "Acharya talabalariga mo‘ljallangan LMS — kurslar, davomat, progress.",
+        proj2: "Tadbirlarni boshqarish platformasi — rejalashtirish, ro‘yxatdan o‘tish, admin.",
+        proj3: "FastAPI asosidagi kitoblar bazasi — izlash va metadata endpointlari.",
+        proj4: "GitHub Webhook bildirishnomalari — Telegram va dashboard integratsiyalari.",
+        botsHeading: "Telegram Botlar",
+        bot1: "Acharya uchun bot — talaba foydalanishlari va ma'lumotlar.",
+        bot2: "ChatGPT asosidagi AI yordamchi — suhbat va kodiya yordam.",
+        bot3: "Wikipedia ma'lumot qidiruvchi — qisqacha ma'lumotlar va manbalar.",
+        bot4: "acharya.coderboys.uz bilan integratsiyalangan xabarnoma boti.",
+        bot5: "Aloqa va ma'lumot boti — Ahrorjon bilan anonim yoki ochiq bog‘lanish.",
+        aboutAsad: "To‘rayev Asadbek haqida",
+        asadText: "<strong>To‘rayev Asadbek</strong> — mening kursdoshim va yaqin hamkorim, Acharya Universiteti 2-kurs talabasi. U backend tizimlar, toza arxitektura va foydalanuvchi ehtiyojlariga e'tibor qaratadi. Asadbek <a href='https://library.coderboys.uz' target='_blank' rel='noopener' class='card-link'>library.coderboys.uz</a> loyihasini yaratdi — kuchli onlayn raqamli kutubxona. U test-driven development va o‘qilishi oson kodga e'tibor beradi.",
+        asadProjects: "Asadbekning Loyihalari",
+        asad1: "<a href='https://library.coderboys.uz' target='_blank' rel='noopener' class='card-link'>library.coderboys.uz</a> — To‘rayev Asadbek tomonidan yaratilgan onlayn kutubxona.",
+        friendship: "Turli loyihalarda ishlasak ham, biz qalin do‘stmiz — bir-birimizni qo‘llab-quvvatlaymiz va birgalikda yaxshiroq dasturlar yaratamiz.",
+        contactTitle: "Biz bilan bog‘laning",
+        emailLabel: "<i class='bi bi-envelope me-1'></i> Email: <a href='mailto:axrorback@gmail.com' class='card-link'>axrorback@gmail.com</a>",
+        phoneLabel: "<i class='bi bi-telephone me-1'></i> Telefon: <a href='tel:+998931004005' class='card-link'>+998 93 100 40 05</a>",
+        telegramLabel: "<i class='bi bi-telegram me-1'></i> Telegram: <a href='https://t.me/axrorback' target='_blank' class='card-link'>@axrorback</a>",
+        emailLabel2: "<i class='bi bi-envelope me-1'></i> Email: <a href='mailto:t.asad7044@gmail.com' class='card-link'>t.asad7044@gmail.com</a>",
+        phoneLabel2: "<i class='bi bi-telephone me-1'></i> Telefon: <a href='tel:+998937127044' class='card-link'>+998 93 712 70 44</a>",
+        telegramLabel2: "<i class='bi bi-telegram me-1'></i> Telegram: <a href='https://t.me/asad_back' target='_blank' class='card-link'>@asad_back</a>",
+        footer: "© 2025 Loyihalar - Ahrorjon va Asadbek — Qalin Do‘stlar va Dasturchilar"
+      }
+    };
+
+    // Helper to set innerHTML for translation keys if element exists
+    function applyTranslations(lang){
+      for(const key in translations[lang]){
+        const elId = transKeys[key];
+        if(elId){
+          const el = document.getElementById(elId);
+          if(el) el.innerHTML = translations[lang][key];
+        }
+      }
+      // update document lang attribute
+      document.documentElement.lang = (lang === 'en') ? 'en' : 'uz';
+    }
+
+    // Initialize language
+    const langBtn = document.getElementById('langBtn');
+    let lang = localStorage.getItem(LS_LANG) || 'en';
+    // lang button shows next language to switch-to (we show opposite label for clarity)
+    function updateLangBtn(){
+      langBtn.textContent = (lang === 'en') ? 'UZ' : 'EN';
+    }
+    applyTranslations(lang); updateLangBtn();
+
+    langBtn.addEventListener('click', ()=>{
+      lang = (lang === 'en') ? 'uz' : 'en';
+      localStorage.setItem(LS_LANG, lang);
+      applyTranslations(lang); updateLangBtn();
+    });
+
+    // Theme toggle and persistence
+    const themeBtn = document.getElementById('themeBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    let theme = localStorage.getItem(LS_THEME) || 'dark';
+    function applyTheme(t){
+      document.body.classList.remove('light-mode','dark-mode');
+      document.body.classList.add(t + '-mode');
+      // icon change
+      themeIcon.className = (t === 'light') ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    }
+    applyTheme(theme);
+    themeBtn.addEventListener('click', ()=>{
+      theme = (theme === 'dark') ? 'light' : 'dark';
+      applyTheme(theme);
+      localStorage.setItem(LS_THEME, theme);
+    });
+
+    // Accessibility: allow reduced motion if user prefers
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      const spans = document.querySelectorAll('.avengers-text span');
+      spans.forEach(s=>{ s.style.animation = 'none'; s.style.opacity = 1; s.style.transform = 'none'; });
+    }
+
+    // Optionally: re-run animation on click (for preview)
+    document.querySelector('.avengers-wrap').addEventListener('click', ()=>{
+      const spans = document.querySelectorAll('.avengers-text span');
+      spans.forEach(s => {
+        s.style.animation = 'none';
+        // force reflow
+        void s.offsetWidth;
+        s.style.animation = '';
+      });
+    });
+
+    // Ensure initial text nodes (IDs that are not in translations) show correct static values (emails etc are set in HTML)
+  </script>
+</body>
+</html>
