@@ -143,8 +143,13 @@
       transition: transform .28s ease, box-shadow .28s ease, background .28s ease;
       color: inherit;
     }
-    .glass-card:hover{ transform: translateY(-6px); box-shadow:0 12px 40px rgba(2,6,23,0.35); }
 
+    /* Changed by Asilbek */
+    .glass-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(2,6,23,0.35);
+      border-color: var(--accent); /* Hoverda chegara rangli bo'ladi */
+    }
     /* Bot list should match theme (no white boxes in light/dark) */
     .bot-list .glass-card { display:flex; gap:12px; align-items:center; }
     .bot-icon {
