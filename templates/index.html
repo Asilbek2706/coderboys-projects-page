@@ -163,7 +163,11 @@
     }
 
     /* contact */
-    .contact-box { display:flex; gap:16px; align-items:center; }
+      .contact-box i {
+        color: var(--accent-light);
+        transition: transform 0.3s ease;
+      }
+      .contact-box:hover i { transform: scale(1.2); }
     .contact-meta { flex:1; text-align:left; }
     .contact-meta small { display:block; color:var(--muted); }
 
